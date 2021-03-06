@@ -14,7 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Pokemon-Application\Pokemon-Application.csproj" />
     <ProjectReference Include="..\Pokemon-Domain\Pokemon-Domain.csproj" />
+    <ProjectReference Include="..\Pokemon-Infra\Pokemon-Infra.csproj" />
   </ItemGroup>
 
 </Project>

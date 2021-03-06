@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Pokemon_Domain.Contracts.Services;
 using Pokemon_Domain.Enums;
 using Pokemon_Domain.PokemonContext.Adapters;
 using Pokemon_Domain.PokemonContext.Entity;
@@ -21,9 +22,10 @@ namespace Pokemon_Api.Controllers
         /// <param name="regionEnum"></param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<PokemonRegionWithUrlImage> Pokemons([FromQuery]PokemonsApiInput regionEnum)
+        public async Task<ActionResult<List<PokemonRegionWithUrlImage>>> Pokemons([FromQuery] RegionEnum regionEnum, [FromServices] IPokemonsServices pokemonsServices)
         {
-            return Ok();
+            var repsonse = await pokemonsServices.GetPokemonRegions(regionEnum);
+            return Ok(repsonse);
         }
     }
 }

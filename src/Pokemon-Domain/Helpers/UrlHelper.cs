@@ -13,9 +13,9 @@ namespace Pokemon_Domain.Helpers
         {
             var url = regionEnum switch
             {
-                RegionEnum.Kanto => "?limit=151",
-                RegionEnum.Jotho => "?limit=100&offset=151",
-                RegionEnum.Hoen => "?limit=135&offset=251",
+                RegionEnum.kanto => "?limit=151",
+                RegionEnum.jotho => "?limit=100&offset=151",
+                RegionEnum.hoen => "?limit=135&offset=251",
                 _ => "?limit=151"
             };
 

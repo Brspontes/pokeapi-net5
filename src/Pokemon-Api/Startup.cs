@@ -4,7 +4,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Pokemon_Api.Configs;
+using Pokemon_Application.PokemonsContext;
+using Pokemon_Domain.Configs;
+using Pokemon_Domain.Contracts.Infraestruture;
+using Pokemon_Domain.Contracts.Services;
+using Pokemon_Infra.PokemonsContext;
 using System.Text.Json.Serialization;
 
 namespace Pokemon_Api
@@ -16,7 +20,7 @@ namespace Pokemon_Api
             var builder = new ConfigurationBuilder()
                    .SetBasePath(environment.ContentRootPath)
                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                   .AddJsonFile($"appsettings{environment.EnvironmentName}.json", optional: true)
+                   .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", optional: true)
                    .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -26,6 +30,9 @@ namespace Pokemon_Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IPokemonsServices, PokemonService>();
+            services.AddTransient<IPokemonsRepository, PokemonRepository>();
+
             services.AddControllersWithViews()
                 .AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
