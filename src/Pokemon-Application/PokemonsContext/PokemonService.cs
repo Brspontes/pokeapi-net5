@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.Options;
+﻿using AutoMapper;
+using Microsoft.Extensions.Options;
 using Pokemon_Domain.Configs;
 using Pokemon_Domain.Contracts.Infraestruture;
 using Pokemon_Domain.Contracts.Services;
 using Pokemon_Domain.Enums;
 using Pokemon_Domain.Helpers;
+using Pokemon_Domain.PokemonContext.Adapters.Outputs;
 using Pokemon_Domain.PokemonContext.Entity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Pokemon_Application.PokemonsContext
@@ -17,33 +17,53 @@ namespace Pokemon_Application.PokemonsContext
     {
         private readonly IPokemonsRepository pokemonsRepository;
         private readonly IOptions<PokeApi> options;
+        private readonly IMapper mapper;
 
-        public PokemonService(IPokemonsRepository pokemonsRepository, IOptions<PokeApi> options)
+        public PokemonService(IPokemonsRepository pokemonsRepository, IOptions<PokeApi> options, IMapper mapper)
         {
             this.pokemonsRepository = pokemonsRepository;
             this.options = options;
+            this.mapper = mapper;
         }
 
-        public async Task<List<PokemonRegionWithUrlImage>> GetPokemonRegions(RegionEnum regionEnum)
+        public async Task<List<PokemonWithUrlOutput>> GetPokemonRegions(RegionEnum regionEnum)
         {
-            var pokeList = new List<PokemonRegionWithUrlImage>();
-
-            var response = await pokemonsRepository.GetPokemonRegions(UrlHelper.UrlOffSet(regionEnum));
-
-            response.ForEach(delegate (PokemonRegion pokemonRegion)
+            try
             {
-                var numberImage = pokemonRegion.Url.Replace(options.Value.PokeApiUrl, string.Empty)
-                                       .Replace("/", string.Empty).Trim();
+                var pokeList = new List<PokemonRegionWithUrlImage>();
 
-                pokeList.Add(new PokemonRegionWithUrlImage
+                var response = await pokemonsRepository.GetPokemonRegions(UrlHelper.UrlOffSet(regionEnum));
+
+                response.ForEach(delegate (PokemonRegion pokemonRegion)
                 {
-                    Name = pokemonRegion.Name,
-                    Url = pokemonRegion.Url,
-                    UrlImage = $"{options.Value.ImgUrl}/{urlImageHelper(numberImage)}"
-                });
-            });
+                    var numberImage = pokemonRegion.Url
+                                            .Replace(options.Value.PokeApiUrl, string.Empty)
+                                            .Replace("/", string.Empty)
+                                            .Trim();
 
-            return pokeList;
+                    pokeList.Add(new PokemonRegionWithUrlImage
+                    {
+                        Name = pokemonRegion.Name,
+                        Url = pokemonRegion.Url,
+                        UrlImage = $"{options.Value.ImgUrl}/{urlImageHelper(numberImage)}"
+                    });
+                });
+
+                return mapper.Map<List<PokemonWithUrlOutput>>(pokeList);
+            }
+            catch (Exception ex)
+            {
+                return new List<PokemonWithUrlOutput>
+                {
+                    new PokemonWithUrlOutput
+                    {
+                        Message = MessageHelper.ErrorMessage,
+                        Name = string.Empty,
+                        Url = string.Empty,
+                        Error = ex.Message
+                    }
+                };
+            }
         }
 
         private string urlImageHelper(string number)

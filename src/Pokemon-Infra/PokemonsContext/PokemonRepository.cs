@@ -23,24 +23,16 @@ namespace Pokemon_Infra.PokemonsContext
 
         public async Task<List<PokemonRegion>> GetPokemonRegions(string urlCompose)
         {
-            try
-            {
-                var client = new RestClient(options.Value.PokeApiUrl);
-                var request = new RestRequest(urlCompose);
+            var client = new RestClient(options.Value.PokeApiUrl);
+            var request = new RestRequest(urlCompose);
 
-                var response = await client.ExecuteAsync(request);
-                var jsonObject = JObject.Parse(response.Content);
+            var response = await client.ExecuteAsync(request);
+            var jsonObject = JObject.Parse(response.Content);
 
-                var pokemons = JsonConvert.DeserializeObject<List<PokemonRegion>>
-                    (jsonObject.SelectToken("results").ToString());
+            var pokemons = JsonConvert.DeserializeObject<List<PokemonRegion>>
+                (jsonObject.SelectToken("results").ToString());
 
-                return pokemons;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
+            return pokemons;
         }
     }
 }

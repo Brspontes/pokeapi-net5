@@ -1,9 +1,11 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Pokemon_Api.Configs;
 using Pokemon_Application.PokemonsContext;
 using Pokemon_Domain.Configs;
 using Pokemon_Domain.Contracts.Infraestruture;
@@ -33,13 +35,22 @@ namespace Pokemon_Api
             services.AddTransient<IPokemonsServices, PokemonService>();
             services.AddTransient<IPokemonsRepository, PokemonRepository>();
 
-            services.AddControllersWithViews()
-                .AddJsonOptions(options =>
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new AutoMapperProfille());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             services.Configure<PokeApi>(Configuration.GetSection("PokeApi"));
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(opt =>
+            {
+                opt.JsonSerializerOptions.IgnoreNullValues = true;
+                opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pokemon_Api", Version = "v1" });
