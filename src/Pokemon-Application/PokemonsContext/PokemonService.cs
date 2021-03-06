@@ -26,6 +26,26 @@ namespace Pokemon_Application.PokemonsContext
             this.mapper = mapper;
         }
 
+        public async Task<PokemonDetailsOutput> GetPokemonDetails(string name)
+        {
+            try
+            {
+                var response = await pokemonsRepository.GetPokemoStats(name);
+
+                response.Weaknesses = await pokemonsRepository.GetPokemonWeaknesses(response.Types[0].Type.Name);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new PokemonDetailsOutput
+                {
+                    Error = ex.Message,
+                    Message = MessageHelper.ErrorMessage,
+                };
+            }
+        }
+
         public async Task<List<PokemonWithUrlOutput>> GetPokemonRegions(RegionEnum regionEnum)
         {
             try
@@ -58,8 +78,6 @@ namespace Pokemon_Application.PokemonsContext
                     new PokemonWithUrlOutput
                     {
                         Message = MessageHelper.ErrorMessage,
-                        Name = string.Empty,
-                        Url = string.Empty,
                         Error = ex.Message
                     }
                 };

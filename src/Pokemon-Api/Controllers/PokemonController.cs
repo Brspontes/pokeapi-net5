@@ -22,5 +22,18 @@ namespace Pokemon_Api.Controllers
             var repsonse = await pokemonsServices.GetPokemonRegions(regionEnum);
             return Ok(repsonse);
         }
+
+        /// <summary>
+        /// Get Detail Pokemon
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="pokemonsServices"></param>
+        /// <returns></returns>
+        [HttpGet("PokemonDetail")]
+        public async Task<ActionResult<List<PokemonRegionWithUrlImage>>> PokemonDetail([FromQuery] string name, [FromServices] IPokemonsServices pokemonsServices)
+        {
+            var repsonse = await pokemonsServices.GetPokemonDetails(name);
+            return Ok(repsonse);
+        }
     }
 }
