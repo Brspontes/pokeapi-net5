@@ -78,6 +78,7 @@ namespace Pokemon_Tests.PokemonContext
 
             var retorno = repository.GetPokemoStats("hoen");
             Assert.IsTrue(retorno.Result.Stats[0].Stat.Name.Equals("hp"));
+            Assert.IsTrue(retorno.Result.Stats[0].BaseStat.Equals("39"));
         }
 
         [TestMethod]

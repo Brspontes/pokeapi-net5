@@ -57,5 +57,29 @@ Go to:  https://localhost:5001/swagger
 Swagger opnend
 
 ![swagger](https://user-images.githubusercontent.com/14333695/110219452-1c51fd80-7e9e-11eb-841d-724b2c2aee58.png)
+<h2>Tests and Code Coverage</h2>
+This app contains unit tests and coverage, for run unit tests go to root folder and execute 
+
+```bash
+dotnet test
+```
+
+but can you generate code coverage report execute this steps, in root folder execute
+```bash
+dotnet test --collect:"XPlat Code Coverage"
+```
+this command generate folder <strong>TestResults</strong> in folder the test project,
+into folder <strong>Test Results</strong> gerenate other folder with a hash example <strong>4a27fa45-695b-4d82-a53f-4ac17766352a</strong>
+
+copy the hash and execute 
+```bash
+reportgenerator "-reports:E:\GIT\api-pokenon-net5\tests\Pokemon-Tests\TestResults\4a27fa45-695b-4d82-a53f-4ac17766352a\coverage.cobertura.xml" "-targetdir:coveragereport" -reporttypes:Html
+```
+
+this command generate in root folder an other folder with name <strong>coveragereport</strong>
+Open file <strong>index.html<strong>
+
+<img src="https://user-images.githubusercontent.com/14333695/110246301-dea8af80-7f45-11eb-9422-5e4e048633e7.png">
+
 <h2>License</h2>
 <a href="https://github.com/herbsjs/herbs2gql/blob/master/LICENSE">MIT</a>

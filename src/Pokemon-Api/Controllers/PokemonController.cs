@@ -3,10 +3,12 @@ using Pokemon_Domain.Contracts.Services;
 using Pokemon_Domain.Enums;
 using Pokemon_Domain.PokemonContext.Entity;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Pokemon_Api.Controllers
 {
+    [ExcludeFromCodeCoverage]
     [Route("api/[controller]")]
     [ApiController]
     public class PokemonController : ControllerBase

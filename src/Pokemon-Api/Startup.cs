@@ -12,10 +12,12 @@ using Pokemon_Domain.Contracts.Infraestruture;
 using Pokemon_Domain.Contracts.Services;
 using Pokemon_Infra.PokemonsContext;
 using RestSharp;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Pokemon_Api
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IWebHostEnvironment environment)
