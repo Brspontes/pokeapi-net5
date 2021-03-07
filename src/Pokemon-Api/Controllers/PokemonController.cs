@@ -32,6 +32,9 @@ namespace Pokemon_Api.Controllers
         [HttpGet("PokemonDetail")]
         public async Task<ActionResult<List<PokemonRegionWithUrlImage>>> PokemonDetail([FromQuery] string name, [FromServices] IPokemonsServices pokemonsServices)
         {
+            if (string.IsNullOrEmpty(name.Trim()))
+                return BadRequest();
+
             var repsonse = await pokemonsServices.GetPokemonDetails(name);
             return Ok(repsonse);
         }

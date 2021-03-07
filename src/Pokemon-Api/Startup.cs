@@ -11,6 +11,7 @@ using Pokemon_Domain.Configs;
 using Pokemon_Domain.Contracts.Infraestruture;
 using Pokemon_Domain.Contracts.Services;
 using Pokemon_Infra.PokemonsContext;
+using RestSharp;
 using System.Text.Json.Serialization;
 
 namespace Pokemon_Api
@@ -34,6 +35,8 @@ namespace Pokemon_Api
         {
             services.AddTransient<IPokemonsServices, PokemonService>();
             services.AddTransient<IPokemonsRepository, PokemonRepository>();
+            services.AddTransient<IRestClient, RestClient>();
+            services.AddTransient<IRestRequest, RestRequest>();
 
             var mapperConfig = new MapperConfiguration(mc =>
             {
