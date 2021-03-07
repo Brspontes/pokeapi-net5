@@ -13,6 +13,8 @@ namespace Pokemon_Tests.PokemonContext
     public class PokemonRepositoryTest
     {
         private string expectedReturn = "{'results':[{'name':'bulbasaur','url':'https://pokeapi.co/api/v2/pokemon/1/'}]}";
+        private string expectedReturnStats = "{'stats':[{'base_stat':39,'effort':0,'stat':{'name':'hp','url':'https://pokeapi.co/api/v2/stat/1/'}}],'types':[{'slot':1,'type':{'name':'fire','url':'https://pokeapi.co/api/v2/type/10/'}}]}";
+        private string expectedReturnWeakenesses = "{'damage_relations':{'double_damage_from':[{'name':'ground'}]}}";
         private AutoMocker Mocker;
         private PokeApi optionsValues;
 
@@ -25,7 +27,7 @@ namespace Pokemon_Tests.PokemonContext
             {
                 ImgUrl = "urlImg.com",
                 PokeApiUrl = "https://pokeapi.co/api/v2/pokemon/",
-                Weaknesses = "pokeapi.com"
+                Weaknesses = "https://pokeapi.co/api/v2/pokemon/"
             };
         }
 
@@ -60,6 +62,38 @@ namespace Pokemon_Tests.PokemonContext
 
             var retorno = repository.GetPokemonRegions("hoen");
             Assert.IsTrue(retorno.Exception.InnerExceptions[0].ToString().Contains("Not Found"));
+        }
+
+        [TestMethod]
+        public void should_returns_stats_node_and_type()
+        {
+            var optionsMock = Mocker.GetMock<IOptions<PokeApi>>();
+            optionsMock.Setup(c => c.Value).Returns(optionsValues);
+
+            var restClientMock = Mocker.GetMock<IRestClient>();
+            restClientMock.Setup(c => c.ExecuteAsync(It.IsAny<IRestRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new RestResponse { StatusCode = System.Net.HttpStatusCode.OK, Content = expectedReturnStats });
+
+            var repository = Mocker.CreateInstance<PokemonRepository>();
+
+            var retorno = repository.GetPokemoStats("hoen");
+            Assert.IsTrue(retorno.Result.Stats[0].Stat.Name.Equals("hp"));
+        }
+
+        [TestMethod]
+        public void should_returns_weakenesses()
+        {
+            var optionsMock = Mocker.GetMock<IOptions<PokeApi>>();
+            optionsMock.Setup(c => c.Value).Returns(optionsValues);
+
+            var restClientMock = Mocker.GetMock<IRestClient>();
+            restClientMock.Setup(c => c.ExecuteAsync(It.IsAny<IRestRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new RestResponse { StatusCode = System.Net.HttpStatusCode.OK, Content = expectedReturnWeakenesses });
+
+            var repository = Mocker.CreateInstance<PokemonRepository>();
+
+            var retorno = repository.GetPokemonWeaknesses("hoen");
+            Assert.IsTrue(retorno.Result[0].Name.Equals("ground"));
         }
     }
 }
