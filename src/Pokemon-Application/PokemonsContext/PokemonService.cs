@@ -86,8 +86,7 @@ namespace Pokemon_Application.PokemonsContext
 
         private string urlImageHelper(string number)
         {
-            if (number.Length < 3)
-                return number.PadLeft(3, '0');
+            if (number.Length < 3) return number.PadLeft(3, '0');
 
             return number;
         }
