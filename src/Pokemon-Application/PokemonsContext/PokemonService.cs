@@ -68,7 +68,6 @@ namespace Pokemon_Application.PokemonsContext
                         UrlImage = $"{options.Value.ImgUrl}/{urlImageHelper(numberImage)}"
                     });
                 });
-                var test = mapper.Map<List<PokemonWithUrlOutput>>(pokeList);
                 return mapper.Map<List<PokemonWithUrlOutput>>(pokeList);
             }
             catch (Exception ex)
