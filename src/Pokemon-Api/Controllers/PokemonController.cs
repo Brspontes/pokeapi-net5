@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pokemon_Domain.Contracts.Services;
 using Pokemon_Domain.Enums;
+using Pokemon_Domain.PokemonContext.Adapters.Outputs;
 using Pokemon_Domain.PokemonContext.Entity;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Pokemon_Api.Controllers
@@ -32,10 +34,10 @@ namespace Pokemon_Api.Controllers
         /// <param name="pokemonsServices"></param>
         /// <returns></returns>
         [HttpGet("PokemonDetail")]
-        public async Task<ActionResult<List<PokemonRegionWithUrlImage>>> PokemonDetail([FromQuery] string name, [FromServices] IPokemonsServices pokemonsServices)
+        public async Task<ActionResult<List<PokemonDetailsOutput>>> PokemonDetail([FromQuery] string name, [FromServices] IPokemonsServices pokemonsServices)
         {
             if (string.IsNullOrEmpty(name.Trim()))
-                return BadRequest();
+                return BadRequest();              
 
             var repsonse = await pokemonsServices.GetPokemonDetails(name);
             return Ok(repsonse);

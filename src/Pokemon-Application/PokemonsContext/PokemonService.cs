@@ -9,6 +9,7 @@ using Pokemon_Domain.PokemonContext.Adapters.Outputs;
 using Pokemon_Domain.PokemonContext.Entity;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Pokemon_Application.PokemonsContext
@@ -65,9 +66,19 @@ namespace Pokemon_Application.PokemonsContext
                     {
                         Name = pokemonRegion.Name,
                         Url = pokemonRegion.Url,
-                        UrlImage = $"{options.Value.ImgUrl}/{urlImageHelper(numberImage)}"
+                        UrlImage = $"{options.Value.ImgUrl}/{urlImageHelper(numberImage)}.png"
                     });
                 });
+
+                var AllPokemonsWithDetails = pokeList.Select(c => pokemonsRepository.GetPokemoStats(c.Name));
+                var responseDetails = Task.WhenAll(AllPokemonsWithDetails);
+
+                responseDetails.Result.ToList().ForEach(delegate (PokemonDetailsOutput detail)
+                {
+                    var index = pokeList.FindIndex(c => c.Name.ToLower().Equals(detail.Name));
+                    pokeList[index].Types = detail.Types;
+                });
+
                 return mapper.Map<List<PokemonWithUrlOutput>>(pokeList);
             }
             catch (Exception ex)
