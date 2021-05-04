@@ -88,7 +88,7 @@ namespace Pokemon_Application.PokemonsContext
                     new PokemonWithUrlOutput
                     {
                         Message = MessageHelper.ErrorMessage,
-                        Error = ex.Message
+                        Error = ex.Message 
                     }
                 };
             }
