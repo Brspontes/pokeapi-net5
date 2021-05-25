@@ -71,7 +71,7 @@ namespace Pokemon_Api
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pokemon_Api v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint($"./v1/swagger.json", "Pokemon_Api v1"));
 
             app.UseHttpsRedirection();
 
